@@ -1,5 +1,5 @@
 from google.cloud import storage
-import google.auth
+import os
 
 
 class GcloudObject:
@@ -8,7 +8,7 @@ class GcloudObject:
 
     @staticmethod
     def _config():
-        credentials, project = google.auth.default()
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/home/lucas/Downloads/dataengproject-355818-a7335e30d3bb.json"
         client = storage.Client()
         return client
 
@@ -17,4 +17,16 @@ class GcloudObject:
         blob = bucket.blob(blob_name)
         blob.upload_from_filename(path_to_file)
 
+    def get_files_inside_bucket(self, bucket_name: str) -> list:
+        bucket = self.client.get_bucket(bucket_name)
+        blobs = bucket.list_blobs()
+        results = list()
+
+        for blob in blobs:
+            results.append(blob.name)
+
+        return results
+
+if __name__ == '__main__':
+    x = GcloudObject().get_files_inside_bucket(bucket_name="files-etl")
     
