@@ -1,0 +1,5 @@
+__pycache__/
+enem_files/
+parquet_files/
+utils/__pycache__
+.ideas
