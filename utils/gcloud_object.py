@@ -1,14 +1,15 @@
-from google.cloud import storage
+from google.cloud import storage, bigquery
+from utils.logger_print import print_log
 import os
 
 
 class GcloudObject:
     def __init__(self):
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/home/lucas/Downloads/dataengproject-355818-a7335e30d3bb.json"
         self.client = self._config()
 
     @staticmethod
     def _config():
-        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/home/lucas/Downloads/dataengproject-355818-a7335e30d3bb.json"
         client = storage.Client()
         return client
 
@@ -23,10 +24,26 @@ class GcloudObject:
         results = list()
 
         for blob in blobs:
+            if blob.name in results:
+                print(print_log(f"Duplicate file found -> {blob.name}"))
             results.append(blob.name)
 
         return results
 
-if __name__ == '__main__':
-    x = GcloudObject().get_files_inside_bucket(bucket_name="files-etl")
-    
+    @staticmethod
+    def load_bucket_data_to_big_query():
+        bq_client = bigquery.Client()
+
+        print(print_log(f"Processing enem files from Storage to BigQuery!"))
+
+        job_config = bigquery.LoadJobConfig(source_format=bigquery.SourceFormat.PARQUET)
+        uri = "gs://enem-script-teste/MICRODADOS_ENEM_*.parquet"
+        table_id = "dataengproject-355818.enem.raw_data"
+
+        load_job = bq_client.load_table_from_uri(uri, table_id, job_config=job_config) 
+        load_job.result()  
+
+        destination_table = bq_client.get_table(table_id)  
+
+        print(print_log("Table {} uploaded.".format(table_id)))
+        print(print_log("Loaded {} rows.".format(destination_table.num_rows)))
