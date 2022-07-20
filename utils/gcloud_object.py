@@ -7,6 +7,7 @@ class GcloudObject:
     def __init__(self):
         os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/home/lucas/Downloads/dataengproject-355818-a7335e30d3bb.json"
         self.client = self._config()
+        print(self.client)
 
     @staticmethod
     def _config():
@@ -38,7 +39,7 @@ class GcloudObject:
 
         job_config = bigquery.LoadJobConfig(source_format=bigquery.SourceFormat.PARQUET)
         uri = "gs://enem-script-teste/MICRODADOS_ENEM_*.parquet"
-        table_id = "dataengproject-355818.enem.raw_data"
+        table_id = "dataengproject-355818.enem.raw_data2"
 
         load_job = bq_client.load_table_from_uri(uri, table_id, job_config=job_config) 
         load_job.result()  

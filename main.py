@@ -130,9 +130,3 @@ class ExtractEnem(GcloudObject):
 
         print(print_log("All files uploaded successfully!!"))
         return True
-
-        
-if __name__ == '__main__':
-    x = ExtractEnem()
-    x.proccess_enem_files()
-    

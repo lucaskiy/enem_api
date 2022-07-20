@@ -1,5 +1,11 @@
-test1 = """
+query_test = """
+SELECT * FROM `dataengproject-355818.enem.enem_materialized` limit %s
+"""
 
-SELECT * FROM `raw_data` limit 1
+query_year = """
+SELECT * FROM `dataengproject-355818.enem.enem_materialized` where ANO = %s limit %s
+"""
 
+query_state = """
+SELECT * FROM `dataengproject-355818.enem.enem_materialized` where UF_PROVA = '%s' limit %s
 """
